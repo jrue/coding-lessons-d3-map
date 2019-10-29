@@ -24,6 +24,15 @@ module.exports = function(grunt) {
       }
     },
 
+    grunt.initConfig({
+      'gh-pages': {
+        options: {
+          base: 'dist'
+        },
+        src: ['**']
+      }
+    }),
+
 
     //Download local copies of Google fonts, this way we don't rely on Google's servers
     //and have better privacy. Google's license allows for local copies. 
@@ -200,6 +209,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-dart-sass');
   grunt.loadNpmTasks('grunt-google-fonts');
+  grunt.loadNpmTasks('grunt-gh-pages');
 
   //intial setup, really only need to run this once unless adding new Google Fonts
   grunt.registerTask('setup', ['clean', 'googlefonts', 'copy:fonts', 'default']);
