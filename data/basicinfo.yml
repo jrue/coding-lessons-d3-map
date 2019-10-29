@@ -1,0 +1,12 @@
+name: "Coding Exercises"
+title: "In-class exercises"
+description: "Lessons on using functions and conditionals."
+portfolio:
+  - title: "Form"
+    url: "/form/"
+    photo: "https://placehold.it/600x400"
+    description: "Using functions and conditionals to modify user input."
+  - title: "Instagram"
+    url: "/instagram/"
+    photo: "https://placehold.it/600x400"
+    description: "Modifying the code use to create a simple Instagram gallery."
