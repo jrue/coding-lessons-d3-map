@@ -31,8 +31,8 @@
 
 
     Promise.all([
-      d3.json("../assets/counties-10m.json"),
-      d3.csv("../assets/unemployment-2018.csv", function(d){ return {id: d.id, rate: +d.rate } })
+      d3.json("assets/counties-10m.json"),
+      d3.csv("assets/unemployment-2018.csv", function(d){ return {id: d.id, rate: +d.rate } })
     ]).then(function(data){
 
         //data[0] will be our topo json
