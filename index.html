@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>County Map</title>
+  </head>
+  <body>
+    
+    
+    <div class="container vh-100"></div>
+      
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+    <script>
+    var svg = d3.select(".container")
+        .append("svg")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("viewBox", "0 0 975 610");
+
+
+    Promise.all([
+      d3.json("../assets/counties-10m.json"),
+      d3.csv("../assets/unemployment-2018.csv", function(d){ return {id: d.id, rate: +d.rate } })
+    ]).then(function(data){
+
+        //data[0] will be our topo json
+        //data[1] will be our csv results, (because it was listed second)
+      
+        
+        var unemployment = d3.map(data[1], function(d){ return d.id; });
+      
+        //https://observablehq.com/@d3/choropleth
+        var color = d3.scaleQuantize([1, 10], d3.schemeBlues[9])
+      
+        //https://github.com/topojson/us-atlas
+        var projection = d3.geoAlbersUsa()
+            .scale(1300)
+            .translate([487.5, 305])
+
+        var path = d3.geoPath()
+            .projection(projection);
+    
+        svg.selectAll("path")
+            .data(topojson.feature(data[0], data[0].objects.counties).features)
+            .join("path")
+            .attr("d", path)
+            .attr("stroke", "none")
+            .attr("fill", function(d){ if(typeof unemployment.get(d.id) != "undefined") return color(unemployment.get(d.id).rate)});
+      
+        svg.append("path")
+          .datum(topojson.feature(data[0], data[0].objects.states))
+          .attr("d", path)
+          .attr("fill", "none")
+          .attr("stroke", "black")
+          .attr("stroke-width", "0.3px")
+
+    });
+
+    </script>
+  </body>
+</html>
