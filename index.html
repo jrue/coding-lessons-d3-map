@@ -21,6 +21,8 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://unpkg.com/topojson@3"></script>
     <script>
+
+
     var svg = d3.select(".container")
         .append("svg")
         .attr("width", "100%")
@@ -38,18 +40,34 @@
       
         
         var unemployment = d3.map(data[1], function(d){ return d.id; });
+
       
         //https://observablehq.com/@d3/choropleth
-        var color = d3.scaleQuantize([1, 10], d3.schemeBlues[9])
+        //var color = d3.scaleQuantize([1, 10], d3.schemeGreens[9].reverse())
+
+
+        var color = d3.scaleQuantize()
+          .domain([1, 10])
+          .range(["#f7fcf5", "#e5f5e0", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"]);
       
         //https://github.com/topojson/us-atlas
         var projection = d3.geoAlbersUsa()
             .scale(1300)
-            .translate([487.5, 305])
+            .translate([487.5, 305]);
+
+        // var projection = d3.geoMercator()
+        //      .scale(600)
+        //      .translate([1500, 900]);
+
+        // <path d="M45,60 L43,21">
+
 
         var path = d3.geoPath()
             .projection(projection);
+
+        console.log(data[0]);
     
+        // //drawing the county lines
         svg.selectAll("path")
             .data(topojson.feature(data[0], data[0].objects.counties).features)
             .join("path")
@@ -57,12 +75,28 @@
             .attr("stroke", "none")
             .attr("fill", function(d){ if(typeof unemployment.get(d.id) != "undefined") return color(unemployment.get(d.id).rate)});
       
+        // //drawing the state lines
         svg.append("path")
           .datum(topojson.feature(data[0], data[0].objects.states))
           .attr("d", path)
           .attr("fill", "none")
           .attr("stroke", "black")
-          .attr("stroke-width", "0.3px")
+          .attr("stroke-width", "0.3px");
+
+        svg.append("path")
+          .datum(topojson.feature(data[0], data[0].objects.nation))
+          .attr("d", path)
+          .attr("stroke", "black")
+          .attr("fill", "none");
+
+
+        svg.append("circle")
+          .attr("cx", projection([-122.26, 37.87])[0])
+          .attr("cy", projection([-122.26, 37.87])[1])
+          .attr("r", 50)
+          .attr("fill", "none")
+          .attr("stroke", "black")
+          .attr("stroke-width", 0.5)
 
     });
 
