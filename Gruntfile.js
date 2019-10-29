@@ -24,14 +24,15 @@ module.exports = function(grunt) {
       }
     },
 
-    grunt.initConfig({
-      'gh-pages': {
-        options: {
-          base: 'dist'
-        },
-        src: ['**']
-      }
-    }),
+
+    
+    'gh-pages': {
+      options: {
+        base: 'dist'
+      },
+      src: ['**']
+    },
+
 
 
     //Download local copies of Google fonts, this way we don't rely on Google's servers
@@ -217,6 +218,6 @@ module.exports = function(grunt) {
   //create build folder and run watch task
   grunt.registerTask('default', ['copy:assets','copy:js','dart-sass','process','connect','watch']);
 
-  grunt.registerTask('deploy', ['copy:assets','copy:js','dart-sass', 'gh-pages']);
+  grunt.registerTask('deploy', ['copy:assets','copy:js','dart-sass','gh-pages']);
 
 };
